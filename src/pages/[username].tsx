@@ -33,7 +33,7 @@ export default function Userpage({
       gateway.addListener("post", newPost);
     }
 
-    () => {
+    return () => {
       gateway.removeListener("post", newPost);
     };
   }, [router.query.username]);
@@ -156,7 +156,7 @@ const LastSaidGM = styled.h3`
 
 const ProfileContainer = styled.div`
   background-color: #38383880;
-  width: 100%;
+  min-width: 100%;
   max-width: 700px;
   border-radius: 10px;
 

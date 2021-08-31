@@ -30,7 +30,7 @@ export default function Home({ leaderboard: lb }: { leaderboard: User[] }) {
     gateway.addListener("leaderboard", updateLb);
     gateway.addListener("post", newPost);
 
-    () => {
+    return () => {
       gateway.removeListener("leaderboard", updateLb);
       gateway.removeListener("post", newPost);
     };
@@ -59,8 +59,8 @@ export default function Home({ leaderboard: lb }: { leaderboard: User[] }) {
           <LeaderboardContainer>
             {leaderboard &&
               leaderboard.map((lb, index) => (
-                <Link href={lb.username}>
-                  <LeaderboardEntry key={index + 1}>
+                <Link href={lb.username} key={index + 1}>
+                  <LeaderboardEntry>
                     <Number>#{index + 1}</Number>
                     <UserAvatar src={lb.avatar} />
                     <Names>

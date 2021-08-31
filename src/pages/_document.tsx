@@ -42,10 +42,6 @@ export default class MyDocument extends Document<any> {
             rel="stylesheet"
             href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,400;0,600;0,800;1,400;1,600;1,800&amp;display=swap"
           />
-          <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1.0"
-          />
         </Head>
         <body>
           <Main />
