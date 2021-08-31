@@ -3,6 +3,7 @@ import Head from "next/head";
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { ToastContainer, toast } from "react-toastify";
+import Link from "next/link";
 
 import "react-toastify/dist/ReactToastify.css";
 
@@ -58,8 +59,8 @@ export default function Home({ leaderboard: lb }: { leaderboard: User[] }) {
           <LeaderboardContainer>
             {leaderboard &&
               leaderboard.map((lb, index) => (
-                <>
-                  <LeaderboardEntry>
+                <Link href={lb.username}>
+                  <LeaderboardEntry key={index + 1}>
                     <Number>#{index + 1}</Number>
                     <UserAvatar src={lb.avatar} />
                     <Names>
@@ -68,8 +69,7 @@ export default function Home({ leaderboard: lb }: { leaderboard: User[] }) {
                     </Names>
                     <Score>{lb.score.toLocaleString()}</Score>
                   </LeaderboardEntry>
-                  {index != leaderboard.length - 1 && <MarginBottom />}
-                </>
+                </Link>
               ))}
           </LeaderboardContainer>
           <Footer href="https://dstn.to">dstn.to</Footer>
@@ -85,11 +85,13 @@ const Container = styled.div`
 `;
 
 const Content = styled.div`
+  width: 100%;
   justify-content: center;
   align-items: center;
   margin: auto;
   display: flex;
   flex-direction: column;
+  padding: 10px;
 `;
 
 const Heading = styled.h1`
@@ -100,15 +102,19 @@ const Heading = styled.h1`
 
 const LeaderboardContainer = styled.div`
   background-color: #38383880;
-  width: 700px;
+  max-width: 700px;
+  width: 100%;
   border-radius: 10px;
-
   padding: 20px;
 `;
 
 const LeaderboardEntry = styled.div`
   display: flex;
   flex-direction: row;
+
+  &:not(:last-child) {
+    margin-bottom: 12px;
+  }
 `;
 
 const Names = styled.div`
@@ -117,10 +123,6 @@ const Names = styled.div`
   flex-direction: column;
   margin-left: 10px;
   flex: 1;
-`;
-
-const MarginBottom = styled.div`
-  margin-bottom: 12px;
 `;
 
 const UserAvatar = styled.img`

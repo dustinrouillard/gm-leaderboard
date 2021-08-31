@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
 
+import Link from "next/link";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
@@ -89,7 +90,9 @@ export default function Userpage({
       <Container>
         {user && (
           <Content>
-            <Heading>gm</Heading>
+            <Heading>
+              <Link href="/">gm</Link>
+            </Heading>
             <ProfileContainer>
               <ProfileEntry>
                 <UserAvatar src={user.avatar} />
@@ -124,6 +127,7 @@ export default function Userpage({
 
 const Container = styled.div`
   min-height: 100vh;
+  width: 100%;
   display: flex;
 `;
 
@@ -133,6 +137,7 @@ const Content = styled.div`
   margin: auto;
   display: flex;
   flex-direction: column;
+  padding: 10px;
 `;
 
 const Heading = styled.h1`
@@ -151,7 +156,8 @@ const LastSaidGM = styled.h3`
 
 const ProfileContainer = styled.div`
   background-color: #38383880;
-  width: 700px;
+  width: 100%;
+  max-width: 700px;
   border-radius: 10px;
 
   padding: 20px;
