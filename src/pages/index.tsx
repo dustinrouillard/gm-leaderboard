@@ -10,13 +10,8 @@ import { Post, User } from "../types/Gateway";
 import { getTopGmers } from "../utils/api";
 import { gateway } from "../utils/gateway";
 
-export default function Home() {
-  const [leaderboard, setLeaderboard] = useState<User[]>();
-
-  async function getLb() {
-    const lb = await getTopGmers();
-    setLeaderboard(lb);
-  }
+export default function Home({ leaderboard: lb }: { leaderboard: User[] }) {
+  const [leaderboard, setLeaderboard] = useState<User[]>(lb);
 
   async function newPost(data: { user: User; post: Post }) {
     toast(
@@ -31,8 +26,6 @@ export default function Home() {
   }
 
   useEffect(() => {
-    getLb();
-
     gateway.addListener("leaderboard", updateLb);
     gateway.addListener("post", newPost);
 
@@ -175,3 +168,13 @@ const Footer = styled.a`
   margin: 10px;
   opacity: 0.4;
 `;
+
+export async function getServerSideProps(context: any) {
+  const leaderboard = await getTopGmers();
+
+  return {
+    props: {
+      leaderboard,
+    },
+  };
+}
