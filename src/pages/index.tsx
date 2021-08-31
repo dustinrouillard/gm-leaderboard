@@ -19,7 +19,11 @@ export default function Home() {
   }
 
   async function newPost(data: { user: User; post: Post }) {
-    toast(`${data.user.name} said ${data.post.type.toLowerCase()}`);
+    toast(
+      `${data.user.name} (@${
+        data.user.username
+      }) said ${data.post.type.toLowerCase()}`
+    );
   }
 
   async function updateLb(new_users: User[]) {
