@@ -181,6 +181,7 @@ const UserAvatar = styled.img`
   border-radius: 10px;
   width: 196px;
   height: 196px;
+  object-fit: cover;
 `;
 
 const Name = styled.h2`

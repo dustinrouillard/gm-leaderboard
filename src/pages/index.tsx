@@ -107,6 +107,7 @@ const LeaderboardContainer = styled.div`
 `;
 
 const LeaderboardEntry = styled.div`
+  cursor: pointer;
   display: flex;
   flex-direction: row;
 
@@ -127,6 +128,7 @@ const UserAvatar = styled.img`
   border-radius: 50%;
   width: 48px;
   height: 48px;
+  object-fit: cover;
 `;
 
 const Number = styled.h2`
