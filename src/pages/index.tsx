@@ -62,7 +62,15 @@ export default function Home({ leaderboard: lb }: { leaderboard: User[] }) {
                 </Link>
               ))}
           </LeaderboardContainer>
-          <Footer href="https://dstn.to">dstn.to</Footer>
+          <Footer>
+            <a target="_blank" href="https://dstn.to">
+              dstn.to
+            </a>{" "}
+            •{" "}
+            <a target="_blank" href="https://dstn.to/gm-lb">
+              Source
+            </a>
+          </Footer>
         </Content>
       </Container>
     </>
@@ -154,7 +162,7 @@ const Score = styled.h2`
   color: #ffffff;
 `;
 
-const Footer = styled.a`
+const Footer = styled.span`
   font-size: 14px;
   font-weight: bold;
   margin: 10px;
