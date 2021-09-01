@@ -58,10 +58,10 @@ export default function Home({ leaderboard: lb }: { leaderboard: User[] }) {
           <Heading>gm leaderboard</Heading>
           <LeaderboardContainer>
             {leaderboard &&
-              leaderboard.map((lb, index) => (
-                <Link href={lb.username} key={index + 1}>
+              leaderboard.map((lb) => (
+                <Link href={lb.username} key={lb.id}>
                   <LeaderboardEntry>
-                    <Number>#{index + 1}</Number>
+                    <Number>#{lb.rank}</Number>
                     <UserAvatar src={lb.avatar} />
                     <Names>
                       <Name>{lb.name}</Name>

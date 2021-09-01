@@ -4,6 +4,7 @@ export interface User {
   id: string;
   name: string;
   score: number;
+  rank: number;
   username: string;
 }
 

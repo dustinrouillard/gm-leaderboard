@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 
 import Link from "next/link";
 import styled from "styled-components";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
@@ -56,7 +56,7 @@ export default function Userpage({
             <meta property="og:title" content={`@${user.username} on gm`} />
             <meta
               property="og:description"
-              content={`Score: ${user.score.toLocaleString()}`}
+              content={`Rank: ${user.rank.toLocaleString()} - Score: ${user.score.toLocaleString()}`}
             />
             <meta property="og:image" content={user.avatar} />
 
@@ -103,6 +103,7 @@ export default function Userpage({
                   </Names>
                   {!!user.bio && <ProfileBio>{user.bio}</ProfileBio>}
                   <Bottom>
+                    <Score>Rank: {user.rank.toLocaleString()}</Score>
                     <Score>Score: {user.score.toLocaleString()}</Score>
                     {!!user.last_post && (
                       <LastSaidGM>
