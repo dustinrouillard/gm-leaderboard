@@ -2,25 +2,17 @@ import Head from "next/head";
 
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import Link from "next/link";
 
 import "react-toastify/dist/ReactToastify.css";
 
-import { Post, User } from "../types/Gateway";
+import { User } from "../types/Gateway";
 import { getTopGmers } from "../utils/api";
 import { gateway } from "../utils/gateway";
 
 export default function Home({ leaderboard: lb }: { leaderboard: User[] }) {
   const [leaderboard, setLeaderboard] = useState<User[]>(lb);
-
-  async function newPost(data: { user: User; post: Post }) {
-    toast(
-      `${data.user.name} (@${
-        data.user.username
-      }) said ${data.post.type.toLowerCase()}`
-    );
-  }
 
   async function updateLb(new_users: User[]) {
     setLeaderboard(new_users);
@@ -28,11 +20,9 @@ export default function Home({ leaderboard: lb }: { leaderboard: User[] }) {
 
   useEffect(() => {
     gateway.addListener("leaderboard", updateLb);
-    gateway.addListener("post", newPost);
 
     return () => {
       gateway.removeListener("leaderboard", updateLb);
-      gateway.removeListener("post", newPost);
     };
   }, []);
 

@@ -1,5 +1,6 @@
 import { EventEmitter } from "events";
 import { inflate, deflate } from "pako";
+import { toast } from "react-toastify";
 import { Post, User } from "../types/Gateway";
 
 export const GATEWAY_HOST = 'wss://gm-gateway.dstn.to';
@@ -111,7 +112,11 @@ export class Gateway extends EventEmitter {
 
         break;
       case Op.NewPost:
-        this.emit('post', data.d);
+        const d = data.d as { user: User; post: Post };
+        toast(
+          `${d.user.name} (@${d.user.username
+          }) said ${d.post.type.toLowerCase()}`
+        );
 
         break;
 

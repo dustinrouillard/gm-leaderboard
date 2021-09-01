@@ -10,7 +10,6 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { Post, User } from "../types/Gateway";
 import { getUser } from "../utils/api";
-import { gateway } from "../utils/gateway";
 import { timeSince } from "../utils/time";
 
 export default function Userpage({
@@ -18,26 +17,6 @@ export default function Userpage({
 }: {
   user: User & { last_post: Post };
 }) {
-  const router = useRouter();
-
-  async function newPost(data: { user: User; post: Post }) {
-    toast(
-      `${data.user.name} (@${
-        data.user.username
-      }) said ${data.post.type.toLowerCase()}`
-    );
-  }
-
-  useEffect(() => {
-    if (router.query.username) {
-      gateway.addListener("post", newPost);
-    }
-
-    return () => {
-      gateway.removeListener("post", newPost);
-    };
-  }, [router.query.username]);
-
   return (
     <>
       <Head>
