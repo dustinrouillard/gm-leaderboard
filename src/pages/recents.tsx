@@ -73,9 +73,7 @@ export default function Home({ recent }: { recent: PostWithCreator[] }) {
                       </Name>
                       <GMMessage>gm</GMMessage>
                     </Names>
-                    <DateCreated>
-                      {timeSince(new Date(lb.creation_time), true)}
-                    </DateCreated>
+                    <DateCreated>{timeSince(new Date(lb.creation_time), true)}</DateCreated>
                   </LeaderboardEntry>
                 </Link>
               ))}
@@ -111,14 +109,14 @@ const Content = styled.div`
 `;
 
 const Heading = styled.h1`
-  font-family: Karla, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-    Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: Karla, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans,
+    Droid Sans, Helvetica Neue, sans-serif;
   margin: 10px;
 `;
 
 const HeadingLink = styled.a<{ inactive?: boolean }>`
-  font-family: Karla, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-    Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: Karla, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans,
+    Droid Sans, Helvetica Neue, sans-serif;
   font-size: 20px;
   font-weight: bold;
   margin: 10px;
