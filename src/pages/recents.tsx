@@ -1,6 +1,6 @@
 import Head from "next/head";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { ToastContainer } from "react-toastify";
 import Link from "next/link";
@@ -15,12 +15,23 @@ import { GetStaticProps } from "next";
 
 export default function Home({ recent }: { recent: PostWithCreator[] }) {
   const [recents, setRecents] = useState<PostWithCreator[]>(recent);
+  const [autoscroll, setAutoscroll] = useState(true);
+  
+  const lastEntry = useRef<HTMLDivElement>();
+  const listRef = useRef<HTMLDivElement & {scrollTopMax: number}>();
 
   async function updatePosts(new_post: PostWithCreator) {
     setRecents((prev) => {
-      prev.shift();
+      if (prev.length >= 25) prev.shift();
       return [...prev, new_post];
     });
+
+    if (autoscroll) lastEntry.current.scrollIntoView();
+  }
+
+  function onScroll(event) {
+    if (event.target.scrollTop + 140 <= listRef.current.scrollTopMax) setAutoscroll(false);
+    else setAutoscroll(true);
   }
 
   useEffect(() => {
@@ -62,11 +73,11 @@ export default function Home({ recent }: { recent: PostWithCreator[] }) {
               <HeadingLink>recents</HeadingLink>
             </Link>
           </HeadingNav>
-          <LeaderboardContainer>
+          <LeaderboardContainer onScroll={onScroll} ref={listRef}>
             {recents &&
               recents.map((lb) => (
                 <Link href={lb.creator.username} key={lb.id}>
-                  <LeaderboardEntry>
+                  <LeaderboardEntry ref={lastEntry}>
                     <UserAvatar src={lb.creator.avatar} />
                     <Names>
                       <Name>
@@ -132,6 +143,10 @@ const LeaderboardContainer = styled.div`
   width: 100%;
   border-radius: 10px;
   padding: 20px;
+  max-height: 628px;
+  overflow: scroll;
+  scroll-behavior: smooth;
+
 `;
 
 const LeaderboardEntry = styled.div`
