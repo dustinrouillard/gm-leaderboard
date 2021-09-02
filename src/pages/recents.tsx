@@ -15,7 +15,6 @@ import { GetStaticProps } from "next";
 
 export default function Home({ recent }: { recent: PostWithCreator[] }) {
   const [recents, setRecents] = useState<PostWithCreator[]>(recent);
-  const [autoscroll, setAutoscroll] = useState(true);
   
   const lastEntry = useRef<HTMLDivElement>();
   const listRef = useRef<HTMLDivElement & {scrollTopMax: number}>();
