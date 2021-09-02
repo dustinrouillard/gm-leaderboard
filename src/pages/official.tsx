@@ -200,9 +200,7 @@ export const getStaticProps: GetStaticProps = async function (context) {
   const leaderboard = await getOfficialTopGmers();
 
   return {
-    props: {
-      leaderboard,
-    },
+    props: { leaderboard },
     revalidate: 60,
   };
 };

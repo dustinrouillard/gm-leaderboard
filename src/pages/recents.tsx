@@ -188,12 +188,10 @@ const Footer = styled.span`
 `;
 
 export const getStaticProps: GetStaticProps = async function (context) {
-  const leaderboard = await getRecentGmers();
+  const recent = await getRecentGmers();
 
   return {
-    props: {
-      leaderboard,
-    },
+    props: { recent },
     revalidate: 60,
   };
 };
