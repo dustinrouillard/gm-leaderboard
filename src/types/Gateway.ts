@@ -11,7 +11,7 @@ export interface User {
 export interface OfficialUser {
   avatarUrl: string;
   bio: string;
-  id: string;
+  uid: string;
   name: string;
   gmScore: number;
   rank: number;
