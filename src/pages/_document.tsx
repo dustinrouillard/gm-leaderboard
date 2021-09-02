@@ -11,8 +11,7 @@ export default class MyDocument extends Document<any> {
       // wraps the collectStyles provider around our <App />.
       ctx.renderPage = () =>
         originalRenderPage({
-          enhanceApp: (App) => (props) =>
-            sheet.collectStyles(<App {...props} />),
+          enhanceApp: (App) => (props) => sheet.collectStyles(<App {...props} />),
         });
 
       // extract the initial props that may be present.

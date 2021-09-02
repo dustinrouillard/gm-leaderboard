@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { User } from "../types/Gateway";
 import { getTopGmers } from "../utils/api";
 import { gateway } from "../utils/gateway";
+import { GetStaticProps } from "next";
 
 export default function Home({ leaderboard: lb }: { leaderboard: User[] }) {
   const [leaderboard, setLeaderboard] = useState<User[]>(lb);
@@ -104,14 +105,14 @@ const Content = styled.div`
 `;
 
 const Heading = styled.h1`
-  font-family: Karla, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-    Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: Karla, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans,
+    Droid Sans, Helvetica Neue, sans-serif;
   margin: 10px;
 `;
 
 const HeadingLink = styled.a<{ inactive?: boolean }>`
-  font-family: Karla, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-    Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: Karla, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans,
+    Droid Sans, Helvetica Neue, sans-serif;
   font-size: 20px;
   font-weight: bold;
   margin: 10px;
@@ -193,12 +194,13 @@ const Footer = styled.span`
   opacity: 0.4;
 `;
 
-export async function getServerSideProps(context: any) {
+export const getStaticProps: GetStaticProps = async function (context) {
   const leaderboard = await getTopGmers();
 
   return {
     props: {
       leaderboard,
     },
+    revalidate: 60,
   };
-}
+};

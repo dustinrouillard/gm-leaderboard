@@ -11,6 +11,7 @@ import { PostWithCreator } from "../types/Gateway";
 import { getRecentGmers } from "../utils/api";
 import { gateway } from "../utils/gateway";
 import { timeSince } from "../utils/time";
+import { GetStaticProps } from "next";
 
 export default function Home({ recent }: { recent: PostWithCreator[] }) {
   const [recents, setRecents] = useState<PostWithCreator[]>(recent);
@@ -73,9 +74,7 @@ export default function Home({ recent }: { recent: PostWithCreator[] }) {
                       </Name>
                       <GMMessage>gm</GMMessage>
                     </Names>
-                    <DateCreated>
-                      {timeSince(new Date(lb.creation_time), true)}
-                    </DateCreated>
+                    <DateCreated>{timeSince(new Date(lb.creation_time), true)}</DateCreated>
                   </LeaderboardEntry>
                 </Link>
               ))}
@@ -111,14 +110,14 @@ const Content = styled.div`
 `;
 
 const Heading = styled.h1`
-  font-family: Karla, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-    Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: Karla, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans,
+    Droid Sans, Helvetica Neue, sans-serif;
   margin: 10px;
 `;
 
 const HeadingLink = styled.a<{ inactive?: boolean }>`
-  font-family: Karla, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-    Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: Karla, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans,
+    Droid Sans, Helvetica Neue, sans-serif;
   font-size: 20px;
   font-weight: bold;
   margin: 10px;
@@ -188,12 +187,11 @@ const Footer = styled.span`
   opacity: 0.4;
 `;
 
-export async function getServerSideProps(context: any) {
+export const getStaticProps: GetStaticProps = async function (context) {
   const recent = await getRecentGmers();
 
   return {
-    props: {
-      recent,
-    },
+    props: { recent },
+    revalidate: 60,
   };
-}
+};

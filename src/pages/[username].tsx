@@ -1,22 +1,15 @@
 import Head from "next/head";
-import { useRouter } from "next/router";
-
 import Link from "next/link";
 import styled from "styled-components";
-import { useEffect } from "react";
-import { ToastContainer, toast } from "react-toastify";
-
-import "react-toastify/dist/ReactToastify.css";
-
+import { ToastContainer } from "react-toastify";
 import { Post, User } from "../types/Gateway";
 import { getUser } from "../utils/api";
 import { timeSince } from "../utils/time";
+import { GetStaticPaths, GetStaticProps } from "next";
 
-export default function Userpage({
-  user,
-}: {
-  user: User & { last_post: Post };
-}) {
+import "react-toastify/dist/ReactToastify.css";
+
+export default function Userpage({ user }: { user: User & { last_post: Post } }) {
   return (
     <>
       <Head>
@@ -27,10 +20,7 @@ export default function Userpage({
           <>
             <meta name="description" content="" />
 
-            <meta
-              property="og:url"
-              content={`https://gm.dstn.to/${user.username}`}
-            />
+            <meta property="og:url" content={`https://gm.dstn.to/${user.username}`} />
             <meta property="og:type" content="website" />
             <meta property="og:title" content={`@${user.username} on gm`} />
             <meta
@@ -41,10 +31,7 @@ export default function Userpage({
 
             <meta name="twitter:card" content="summary" />
             <meta property="twitter:domain" content="gm.dstn.to" />
-            <meta
-              property="twitter:url"
-              content={`https://gm.dstn.to/${user.username}`}
-            />
+            <meta property="twitter:url" content={`https://gm.dstn.to/${user.username}`} />
             <meta name="twitter:title" content={`@${user.username} on gm`} />
             <meta
               name="twitter:description"
@@ -85,14 +72,9 @@ export default function Userpage({
                     <Score>Rank: {user.rank.toLocaleString()}</Score>
                     <Score>Score: {user.score.toLocaleString()}</Score>
                     {!!user.last_post && (
-                      <LastSaidGM>
-                        Last GM:{" "}
-                        {timeSince(new Date(user.last_post.creation_time))} ago
-                      </LastSaidGM>
+                      <LastSaidGM>Last GM: {timeSince(new Date(user.last_post.creation_time))} ago</LastSaidGM>
                     )}
-                    {!user.last_post && (
-                      <LastSaidGM>Last GM: Not seen recently</LastSaidGM>
-                    )}
+                    {!user.last_post && <LastSaidGM>Last GM: Not seen recently</LastSaidGM>}
                   </Bottom>
                 </Extra>
               </ProfileEntry>
@@ -129,14 +111,14 @@ const Content = styled.div`
 `;
 
 const Heading = styled.h1`
-  font-family: Karla, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-    Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: Karla, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans,
+    Droid Sans, Helvetica Neue, sans-serif;
   margin: 10px;
 `;
 
 const LastSaidGM = styled.h3`
-  font-family: Karla, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-    Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: Karla, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans,
+    Droid Sans, Helvetica Neue, sans-serif;
   margin: 0px;
   margin-left: 0px;
   color: #ffffff;
@@ -210,16 +192,27 @@ const Footer = styled.span`
   opacity: 0.4;
 `;
 
-export async function getServerSideProps(context: any) {
-  const { username } = context.query;
+type Awaited<T> = T extends PromiseLike<infer U> ? Awaited<U> : T;
+export const getStaticProps: GetStaticProps<{ user: Awaited<ReturnType<typeof getUser>> }, { username: string }> =
+  async function (context) {
+    const { username } = context.params;
 
-  try {
-    const user = await getUser(username);
+    try {
+      const user = await getUser(username);
+      return {
+        props: { user },
+        revalidate: 60,
+      };
+    } catch (error: unknown) {
+      return {
+        notFound: true,
+      };
+    }
+  };
 
-    return { props: { user } };
-  } catch (error) {
-    return {
-      notFound: true,
-    };
-  }
-}
+export const getStaticPaths: GetStaticPaths = async function () {
+  return {
+    paths: [],
+    fallback: "blocking",
+  };
+};

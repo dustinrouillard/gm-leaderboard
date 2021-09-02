@@ -10,12 +10,9 @@ import { OfficialUser } from "../types/Gateway";
 import { getOfficialTopGmers, getTopGmers } from "../utils/api";
 import { useEffect, useState } from "react";
 import { gateway } from "../utils/gateway";
+import { GetStaticProps } from "next";
 
-export default function Home({
-  leaderboard: lb,
-}: {
-  leaderboard: OfficialUser[];
-}) {
+export default function Home({ leaderboard: lb }: { leaderboard: OfficialUser[] }) {
   const [leaderboard, setLeaderboard] = useState<OfficialUser[]>(lb);
 
   async function updateLb(new_users: OfficialUser[]) {
@@ -108,14 +105,14 @@ const Content = styled.div`
 `;
 
 const Heading = styled.h1`
-  font-family: Karla, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-    Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: Karla, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans,
+    Droid Sans, Helvetica Neue, sans-serif;
   margin: 10px;
 `;
 
 const HeadingLink = styled.a<{ inactive?: boolean }>`
-  font-family: Karla, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-    Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: Karla, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans,
+    Droid Sans, Helvetica Neue, sans-serif;
   font-size: 20px;
   font-weight: bold;
   margin: 10px;
@@ -199,12 +196,11 @@ const Footer = styled.span`
   opacity: 0.4;
 `;
 
-export async function getServerSideProps(context: any) {
+export const getStaticProps: GetStaticProps = async function (context) {
   const leaderboard = await getOfficialTopGmers();
 
   return {
-    props: {
-      leaderboard,
-    },
+    props: { leaderboard },
+    revalidate: 60,
   };
-}
+};
