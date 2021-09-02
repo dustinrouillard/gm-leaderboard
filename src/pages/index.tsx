@@ -53,17 +53,20 @@ export default function Home({ leaderboard: lb }: { leaderboard: User[] }) {
             <Link href="/official" passHref>
               <HeadingLink inactive>official</HeadingLink>
             </Link>
+            <Link href="/recents" passHref>
+              <HeadingLink inactive>recents</HeadingLink>
+            </Link>
           </HeadingNav>
           <LeaderboardContainer>
             {leaderboard &&
               leaderboard.map((lb) => (
-                <Link href={lb.username} key={lb.id}>
+                <Link href={lb.username} key={lb.uid}>
                   <LeaderboardEntry>
                     <Number>#{lb.rank}</Number>
                     <UserAvatar src={lb.avatar} />
                     <Names>
                       <Name>{lb.name}</Name>
-                      <Username>{lb.username}</Username>
+                      <Username>@{lb.username}</Username>
                     </Names>
                     <Score>{lb.score.toLocaleString()}</Score>
                   </LeaderboardEntry>

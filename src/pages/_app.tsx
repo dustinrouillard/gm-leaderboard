@@ -25,7 +25,7 @@ const GlobalStyle = createGlobalStyle`
   
   * {
     box-sizing: border-box;
-    transition: all 150ms linear;
+    transition: all 200ms linear;
   }
 `;
 

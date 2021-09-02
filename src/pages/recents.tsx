@@ -1,39 +1,39 @@
 import Head from "next/head";
-import Link from "next/link";
 
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { ToastContainer } from "react-toastify";
+import Link from "next/link";
 
 import "react-toastify/dist/ReactToastify.css";
 
-import { OfficialUser } from "../types/Gateway";
-import { getOfficialTopGmers, getTopGmers } from "../utils/api";
-import { useEffect, useState } from "react";
+import { PostWithCreator } from "../types/Gateway";
+import { getRecentGmers } from "../utils/api";
 import { gateway } from "../utils/gateway";
+import { timeSince } from "../utils/time";
 
-export default function Home({
-  leaderboard: lb,
-}: {
-  leaderboard: OfficialUser[];
-}) {
-  const [leaderboard, setLeaderboard] = useState<OfficialUser[]>(lb);
+export default function Home({ recent }: { recent: PostWithCreator[] }) {
+  const [recents, setRecents] = useState<PostWithCreator[]>(recent);
 
-  async function updateLb(new_users: OfficialUser[]) {
-    setLeaderboard(new_users);
+  async function updatePosts(new_post: PostWithCreator) {
+    setRecents((prev) => {
+      prev.shift();
+      return [...prev, new_post];
+    });
   }
 
   useEffect(() => {
-    gateway.addListener("official_leaderboard", updateLb);
+    gateway.addListener("post", updatePosts);
 
     return () => {
-      gateway.removeListener("official_leaderboard", updateLb);
+      gateway.removeListener("post", updatePosts);
     };
   }, []);
 
   return (
     <>
       <Head>
-        <title>gm leaderboard • dstn.to</title>
+        <title>gm recents • dstn.to</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <ToastContainer
@@ -49,30 +49,33 @@ export default function Home({
       />
       <Container>
         <Content>
-          <Heading>gm • top fifty</Heading>
+          <Heading>gm • recent gms</Heading>
           <HeadingNav>
             <Link href="/" passHref>
               <HeadingLink inactive>unofficial</HeadingLink>
             </Link>
             <Link href="/official" passHref>
-              <HeadingLink>official</HeadingLink>
+              <HeadingLink inactive>official</HeadingLink>
             </Link>
             <Link href="/recents" passHref>
-              <HeadingLink inactive>recents</HeadingLink>
+              <HeadingLink>recents</HeadingLink>
             </Link>
           </HeadingNav>
           <LeaderboardContainer>
-            {leaderboard &&
-              leaderboard.map((lb, index) => (
-                <Link href={lb.username} key={lb.uid}>
+            {recents &&
+              recents.map((lb) => (
+                <Link href={lb.creator.username} key={lb.id}>
                   <LeaderboardEntry>
-                    <Number>#{index + 1}</Number>
-                    <UserAvatar src={lb.avatarUrl} />
+                    <UserAvatar src={lb.creator.avatar} />
                     <Names>
-                      <Name>{lb.name}</Name>
-                      <Username>@{lb.username}</Username>
+                      <Name>
+                        {lb.creator.name} (@{lb.creator.username})
+                      </Name>
+                      <GMMessage>gm</GMMessage>
                     </Names>
-                    <Score>{lb.gmScore.toLocaleString()}</Score>
+                    <DateCreated>
+                      {timeSince(new Date(lb.creation_time), true)}
+                    </DateCreated>
                   </LeaderboardEntry>
                 </Link>
               ))}
@@ -130,8 +133,6 @@ const LeaderboardContainer = styled.div`
   width: 100%;
   border-radius: 10px;
   padding: 20px;
-  max-height: 628px;
-  overflow: scroll;
 `;
 
 const LeaderboardEntry = styled.div`
@@ -159,36 +160,24 @@ const UserAvatar = styled.img`
   object-fit: cover;
 `;
 
-const Number = styled.h2`
-  font-size: 20px;
-  margin: 0px;
-  opacity: 0.6;
-  align-items: center;
-  justify-content: center;
-  display: flex;
-  text-align: right;
-  margin-right: 10px;
-  width: 45px;
-  color: #ffffff;
-`;
-
-const Name = styled.h2`
-  font-size: 20px;
-  margin: 0px;
-  color: #ffffff;
-`;
-
-const Username = styled.h2`
-  font-size: 12px;
-  margin: 0px;
-  color: #ffffff;
-`;
-
-const Score = styled.h2`
-  font-size: 18px;
+const DateCreated = styled.h2`
+  font-size: 14px;
   margin: 0px;
   margin-right: 10px;
   align-self: center;
+  color: #ffffff60;
+`;
+
+const Name = styled.h2`
+  font-size: 18px;
+  margin: 0px;
+  color: #ffffff;
+`;
+
+const GMMessage = styled.h2`
+  font-size: 14px;
+  margin: 0px;
+  margin-right: 10px;
   color: #ffffff;
 `;
 
@@ -200,11 +189,11 @@ const Footer = styled.span`
 `;
 
 export async function getServerSideProps(context: any) {
-  const leaderboard = await getOfficialTopGmers();
+  const recent = await getRecentGmers();
 
   return {
     props: {
-      leaderboard,
+      recent,
     },
   };
 }

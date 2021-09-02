@@ -1,7 +1,7 @@
 import { EventEmitter } from "events";
 import { inflate, deflate } from "pako";
 import { toast } from "react-toastify";
-import { Post, User } from "../types/Gateway";
+import { OfficialUser, Post, User } from "../types/Gateway";
 
 export const GATEWAY_HOST = 'wss://gm-gateway.dstn.to';
 
@@ -9,7 +9,8 @@ enum Op {
   Init,
   Heartbeat,
   LeaderboardChange,
-  NewPost
+  NewPost,
+  OfficialLeaderboardChange
 }
 
 interface SocketData {
@@ -35,6 +36,7 @@ export interface Gateway {
 
   on(event: "post", listener: (data: Post & { creator: User }) => void): this;
   on(event: "leaderboard", listener: (leaderboard: User[]) => void): this;
+  on(event: "official_leaderboard", listener: (leaderboard: OfficialUser[]) => void): this;
 
   on(event: "init", listener: () => void): this;
   on(event: "connected", listener: () => void): this;
@@ -109,14 +111,23 @@ export class Gateway extends EventEmitter {
         break;
       case Op.LeaderboardChange:
         this.emit('leaderboard', data.d['leaderboard']);
+        console.log('%cGateway%c New Leaderboard', 'padding: 10px; font-size: 1em; line-height: 1.4em; color: white; background: #151515; border-radius: 15px;', 'font-size: 1em;', data.d['leaderboard']);
+
+        break;
+      case Op.OfficialLeaderboardChange:
+        this.emit('official_leaderboard', data.d['leaderboard']);
+        console.log('%cGateway%c New Official Leaderboard', 'padding: 10px; font-size: 1em; line-height: 1.4em; color: white; background: #151515; border-radius: 15px;', 'font-size: 1em;', data.d['leaderboard']);
 
         break;
       case Op.NewPost:
+        console.log('%cGateway%c New Post', 'padding: 10px; font-size: 1em; line-height: 1.4em; color: white; background: #151515; border-radius: 15px;', 'font-size: 1em;', data.d);
         const d = data.d as Post & { creator: User };
         toast(
           `${d.creator.name} (@${d.creator.username
           }) said ${d.type.toLowerCase()}`
         );
+        this.emit('post', data.d);
+
 
         break;
 

@@ -1,7 +1,7 @@
 export interface User {
   avatar: string;
   bio: string;
-  id: string;
+  uid: string;
   name: string;
   score: number;
   rank: number;
@@ -21,6 +21,13 @@ export interface OfficialUser {
 export interface Post {
   creation_time: string;
   creator: string;
+  id: string;
+  type: string;
+}
+
+export interface PostWithCreator {
+  creation_time: string;
+  creator: User;
   id: string;
   type: string;
 }
