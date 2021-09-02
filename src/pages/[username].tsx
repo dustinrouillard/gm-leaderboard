@@ -48,7 +48,7 @@ export default function Userpage({
             <meta name="twitter:title" content={`@${user.username} on gm`} />
             <meta
               name="twitter:description"
-              content={`Score: ${user.score.toLocaleString()}`}
+              content={`Rank: ${user.rank.toLocaleString()} - Score: ${user.score.toLocaleString()}`}
             />
             <meta name="twitter:image" content={user.avatar} />
           </>
