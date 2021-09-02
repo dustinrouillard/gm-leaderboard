@@ -30,7 +30,7 @@ export default function Home({ recent }: { recent: PostWithCreator[] }) {
   }
 
   function onScroll(event) {
-    if (event.target.scrollTop + 140 <= listRef.current.scrollTopMax) setAutoscroll(false);
+    if (listRef.current.scrollTopMax - event.target.scrollTop >= 60) setAutoscroll(false);
     else setAutoscroll(true);
   }
 
