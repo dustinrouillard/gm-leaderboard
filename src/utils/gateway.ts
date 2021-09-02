@@ -33,7 +33,7 @@ export interface Gateway {
   encoding: string; // 'etf' | 'json'
   compression: string; // 'zlib' | 'none'
 
-  on(event: "post", listener: (data: { user: User; post: Post }) => void): this;
+  on(event: "post", listener: (data: Post & { creator: User }) => void): this;
   on(event: "leaderboard", listener: (leaderboard: User[]) => void): this;
 
   on(event: "init", listener: () => void): this;
@@ -112,10 +112,10 @@ export class Gateway extends EventEmitter {
 
         break;
       case Op.NewPost:
-        const d = data.d as { user: User; post: Post };
+        const d = data.d as Post & { creator: User };
         toast(
-          `${d.user.name} (@${d.user.username
-          }) said ${d.post.type.toLowerCase()}`
+          `${d.creator.name} (@${d.creator.username
+          }) said ${d.type.toLowerCase()}`
         );
 
         break;
