@@ -10,6 +10,7 @@ import { OfficialUser } from "../types/Gateway";
 import { getOfficialTopGmers, getTopGmers } from "../utils/api";
 import { useEffect, useState } from "react";
 import { gateway } from "../utils/gateway";
+import { GetStaticProps } from "next";
 
 export default function Home({ leaderboard: lb }: { leaderboard: OfficialUser[] }) {
   const [leaderboard, setLeaderboard] = useState<OfficialUser[]>(lb);
@@ -195,12 +196,13 @@ const Footer = styled.span`
   opacity: 0.4;
 `;
 
-export async function getServerSideProps(context: any) {
+export const getStaticProps: GetStaticProps = async function (context) {
   const leaderboard = await getOfficialTopGmers();
 
   return {
     props: {
       leaderboard,
     },
+    revalidate: 60,
   };
-}
+};

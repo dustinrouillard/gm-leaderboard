@@ -11,6 +11,7 @@ import { PostWithCreator } from "../types/Gateway";
 import { getRecentGmers } from "../utils/api";
 import { gateway } from "../utils/gateway";
 import { timeSince } from "../utils/time";
+import { GetStaticProps } from "next";
 
 export default function Home({ recent }: { recent: PostWithCreator[] }) {
   const [recents, setRecents] = useState<PostWithCreator[]>(recent);
@@ -186,12 +187,13 @@ const Footer = styled.span`
   opacity: 0.4;
 `;
 
-export async function getServerSideProps(context: any) {
-  const recent = await getRecentGmers();
+export const getStaticProps: GetStaticProps = async function (context) {
+  const leaderboard = await getRecentGmers();
 
   return {
     props: {
-      recent,
+      leaderboard,
     },
+    revalidate: 60,
   };
-}
+};
