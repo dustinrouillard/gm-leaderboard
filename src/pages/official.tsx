@@ -200,7 +200,6 @@ export async function getServerSideProps(context: any) {
   const leaderboard = await getOfficialTopGmers();
 
   return {
-    props: { leaderboard },
-    revalidate: 60,
+    props: { leaderboard }
   };
 };
