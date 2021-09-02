@@ -192,27 +192,16 @@ const Footer = styled.span`
   opacity: 0.4;
 `;
 
-type Awaited<T> = T extends PromiseLike<infer U> ? Awaited<U> : T;
-export const getStaticProps: GetStaticProps<{ user: Awaited<ReturnType<typeof getUser>> }, { username: string }> =
-  async function (context) {
-    const { username } = context.params;
+export async function getServerSideProps(context: any) {
+  const { username } = context.query;
 
-    try {
-      const user = await getUser(username);
-      return {
-        props: { user },
-        revalidate: 60,
-      };
-    } catch (error: unknown) {
-      return {
-        notFound: true,
-      };
-    }
-  };
+  try {
+    const user = await getUser(username);
 
-export const getStaticPaths: GetStaticPaths = async function () {
-  return {
-    paths: [],
-    fallback: "blocking",
-  };
-};
+    return { props: { user } };
+  } catch (error) {
+    return {
+      notFound: true,
+    };
+  }
+}

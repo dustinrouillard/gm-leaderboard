@@ -1,16 +1,15 @@
 import Head from "next/head";
-
-import { useState, useEffect } from "react";
-import styled from "styled-components";
-import { ToastContainer } from "react-toastify";
 import Link from "next/link";
+
+import styled from "styled-components";
+import { useState, useEffect } from "react";
+import { ToastContainer } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
 
 import { User } from "../types/Gateway";
 import { getTopGmers } from "../utils/api";
 import { gateway } from "../utils/gateway";
-import { GetStaticProps } from "next";
 
 export default function Home({ leaderboard: lb }: { leaderboard: User[] }) {
   const [leaderboard, setLeaderboard] = useState<User[]>(lb);
@@ -194,13 +193,12 @@ const Footer = styled.span`
   opacity: 0.4;
 `;
 
-export const getStaticProps: GetStaticProps = async function (context) {
+export async function getServerSideProps(context: any) {
   const leaderboard = await getTopGmers();
 
   return {
     props: {
       leaderboard,
-    },
-    revalidate: 60,
+    }
   };
 };

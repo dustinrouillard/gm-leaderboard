@@ -196,11 +196,12 @@ const Footer = styled.span`
   opacity: 0.4;
 `;
 
-export const getStaticProps: GetStaticProps = async function (context) {
+export async function getServerSideProps(context: any) {
   const recent = await getRecentGmers();
 
   return {
-    props: { recent },
-    revalidate: 60,
+    props: {
+      recent,
+    },
   };
-};
+}

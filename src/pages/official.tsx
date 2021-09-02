@@ -196,7 +196,7 @@ const Footer = styled.span`
   opacity: 0.4;
 `;
 
-export const getStaticProps: GetStaticProps = async function (context) {
+export async function getServerSideProps(context: any) {
   const leaderboard = await getOfficialTopGmers();
 
   return {
