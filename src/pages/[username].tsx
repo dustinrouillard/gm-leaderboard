@@ -39,7 +39,7 @@ export default function Userpage({
             />
             <meta property="og:image" content={user.avatar} />
 
-            <meta name="twitter:card" content="summary_small_image" />
+            <meta name="twitter:card" content="summary" />
             <meta property="twitter:domain" content="gm.dstn.to" />
             <meta
               property="twitter:url"
