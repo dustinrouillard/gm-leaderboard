@@ -8,6 +8,16 @@ export interface User {
   username: string;
 }
 
+export interface OfficialUser {
+  avatarUrl: string;
+  bio: string;
+  id: string;
+  name: string;
+  gmScore: number;
+  rank: number;
+  username: string;
+}
+
 export interface Post {
   creation_time: string;
   creator: string;

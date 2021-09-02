@@ -7,6 +7,11 @@ export async function getTopGmers(): Promise<User[]> {
   return data.data;
 }
 
+export async function getOfficialTopGmers(): Promise<User[]> {
+  const data = await fetch(`${API_HOST}/top/official`).then(r => r.json());
+  return data.data;
+}
+
 export async function getUser(username: string): Promise<User & { last_post: Post }> {
   if (!username) return;
   const data = await fetch(`${API_HOST}/username/${username}`).then(r => r.json());

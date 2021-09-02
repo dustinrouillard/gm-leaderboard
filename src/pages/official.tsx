@@ -1,31 +1,15 @@
 import Head from "next/head";
+import Link from "next/link";
 
-import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { ToastContainer } from "react-toastify";
-import Link from "next/link";
 
 import "react-toastify/dist/ReactToastify.css";
 
-import { User } from "../types/Gateway";
-import { getTopGmers } from "../utils/api";
-import { gateway } from "../utils/gateway";
+import { OfficialUser } from "../types/Gateway";
+import { getOfficialTopGmers, getTopGmers } from "../utils/api";
 
-export default function Home({ leaderboard: lb }: { leaderboard: User[] }) {
-  const [leaderboard, setLeaderboard] = useState<User[]>(lb);
-
-  async function updateLb(new_users: User[]) {
-    setLeaderboard(new_users);
-  }
-
-  useEffect(() => {
-    gateway.addListener("leaderboard", updateLb);
-
-    return () => {
-      gateway.removeListener("leaderboard", updateLb);
-    };
-  }, []);
-
+export default function Home({ leaderboard }: { leaderboard: OfficialUser[] }) {
   return (
     <>
       <Head>
@@ -45,27 +29,27 @@ export default function Home({ leaderboard: lb }: { leaderboard: User[] }) {
       />
       <Container>
         <Content>
-          <Heading>gm • top ten</Heading>
+          <Heading>gm • top fifty</Heading>
           <HeadingNav>
             <Link href="/" passHref>
-              <HeadingLink>unofficial</HeadingLink>
+              <HeadingLink inactive>unofficial</HeadingLink>
             </Link>
-            <Link href="/official" passHref>
-              <HeadingLink inactive>official</HeadingLink>
+            <Link href="/offical" passHref>
+              <HeadingLink>official</HeadingLink>
             </Link>
           </HeadingNav>
           <LeaderboardContainer>
             {leaderboard &&
-              leaderboard.map((lb) => (
+              leaderboard.map((lb, index) => (
                 <Link href={lb.username} key={lb.id}>
                   <LeaderboardEntry>
-                    <Number>#{lb.rank}</Number>
-                    <UserAvatar src={lb.avatar} />
+                    <Number>#{index + 1}</Number>
+                    <UserAvatar src={lb.avatarUrl} />
                     <Names>
                       <Name>{lb.name}</Name>
                       <Username>{lb.username}</Username>
                     </Names>
-                    <Score>{lb.score.toLocaleString()}</Score>
+                    <Score>{lb.gmScore.toLocaleString()}</Score>
                   </LeaderboardEntry>
                 </Link>
               ))}
@@ -123,6 +107,8 @@ const LeaderboardContainer = styled.div`
   width: 100%;
   border-radius: 10px;
   padding: 20px;
+  max-height: 628px;
+  overflow: scroll;
 `;
 
 const LeaderboardEntry = styled.div`
@@ -191,7 +177,7 @@ const Footer = styled.span`
 `;
 
 export async function getServerSideProps(context: any) {
-  const leaderboard = await getTopGmers();
+  const leaderboard = await getOfficialTopGmers();
 
   return {
     props: {

@@ -212,11 +212,14 @@ const Footer = styled.span`
 
 export async function getServerSideProps(context: any) {
   const { username } = context.query;
-  const user = await getUser(username);
 
-  return {
-    props: {
-      user,
-    },
-  };
+  try {
+    const user = await getUser(username);
+
+    return { props: { user } };
+  } catch (error) {
+    return {
+      notFound: true,
+    };
+  }
 }
