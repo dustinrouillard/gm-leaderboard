@@ -26,12 +26,7 @@ export default function Home({ recent }: { recent: PostWithCreator[] }) {
       return [...prev, new_post];
     });
 
-    if (autoscroll) lastEntry.current.scrollIntoView();
-  }
-
-  function onScroll(event) {
-    if (listRef.current.scrollTopMax - event.target.scrollTop <= 60) setAutoscroll(false);
-    else setAutoscroll(true);
+    if (listRef.current.scrollTopMax - listRef.current.scrollTop <= 60) lastEntry.current.scrollIntoView();
   }
 
   useEffect(() => {
@@ -73,7 +68,7 @@ export default function Home({ recent }: { recent: PostWithCreator[] }) {
               <HeadingLink>recents</HeadingLink>
             </Link>
           </HeadingNav>
-          <LeaderboardContainer onScroll={onScroll} ref={listRef}>
+          <LeaderboardContainer ref={listRef}>
             {recents &&
               recents.map((lb) => (
                 <Link href={lb.creator.username} key={lb.id}>
