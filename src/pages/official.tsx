@@ -34,7 +34,7 @@ export default function Home({ leaderboard }: { leaderboard: OfficialUser[] }) {
             <Link href="/" passHref>
               <HeadingLink inactive>unofficial</HeadingLink>
             </Link>
-            <Link href="/offical" passHref>
+            <Link href="/official" passHref>
               <HeadingLink>official</HeadingLink>
             </Link>
           </HeadingNav>
