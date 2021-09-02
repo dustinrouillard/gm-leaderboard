@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { User } from "../types/Gateway";
 import { getTopGmers } from "../utils/api";
 import { gateway } from "../utils/gateway";
+import { GetStaticProps } from "next";
 
 export default function Home({ leaderboard: lb }: { leaderboard: User[] }) {
   const [leaderboard, setLeaderboard] = useState<User[]>(lb);
@@ -193,12 +194,13 @@ const Footer = styled.span`
   opacity: 0.4;
 `;
 
-export async function getServerSideProps(context: any) {
+export const getStaticProps: GetStaticProps = async function (context) {
   const leaderboard = await getTopGmers();
 
   return {
     props: {
       leaderboard,
     },
+    revalidate: 60,
   };
-}
+};
