@@ -13,9 +13,16 @@ import { gateway } from "../utils/gateway";
 
 export default function Home({ leaderboard: lb }: { leaderboard: User[] }) {
   const [leaderboard, setLeaderboard] = useState<User[]>(lb);
+  
+  const [showChangedLeaderboard, setShowChangedLeaderboard] = useState(false);
 
   async function updateLb(new_users: User[]) {
     setLeaderboard(new_users);
+  }
+
+  function hideLbNotice() {
+    setShowChangedLeaderboard(false);
+    localStorage.setItem('gm_hide_lb_notice_001', 'true');
   }
 
   useEffect(() => {
@@ -26,12 +33,20 @@ export default function Home({ leaderboard: lb }: { leaderboard: User[] }) {
     };
   }, []);
 
+  useEffect(() => {
+    if (typeof window != 'undefined') setShowChangedLeaderboard(localStorage.getItem('gm_hide_lb_notice_001') != 'true');
+  }, []);
+
   return (
     <>
       <Head>
         <title>gm leaderboard • dstn.to</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      {showChangedLeaderboard && <AlertBanner blue>
+        <AlertClose onClick={() => hideLbNotice()}>X</AlertClose>
+        <AlertText>We just changed the unofficial leaderboard to count only public gm's - This is why it may look different.</AlertText>
+      </AlertBanner>}
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -191,6 +206,34 @@ const Footer = styled.span`
   font-weight: bold;
   margin: 10px;
   opacity: 0.4;
+`;
+
+const AlertBanner = styled.div<{ blue?: boolean; red?: boolean }>`
+  position: absolute;
+  width: 100%;
+
+  background-color: ${({blue, red}) => blue ? '#2d8fff' : red ? 'red' : 'green'};
+  color: #ffffff;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const AlertText = styled.p`
+  color: #ffffff;
+  margin: 0;
+  text-align: center;
+  font-weight: bold;
+  flex: 1;
+`;
+
+const AlertClose = styled.p`
+  color: #ffffff;
+  margin: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  opacity: .75;
 `;
 
 export async function getServerSideProps(context: any) {
