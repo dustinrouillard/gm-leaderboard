@@ -1,5 +1,11 @@
 # GM Leaderboard
 
+## gm is shutting down, read more [here](https://gm.town)
+
+### This will be defunct and archived once they've shutdown
+
+---
+
 Leaderboard of the top 10 GM users
 
 Get gm [here](https://gm.town)
