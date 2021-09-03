@@ -22,7 +22,7 @@ export default function Home({ leaderboard: lb }: { leaderboard: User[] }) {
 
   function hideLbNotice() {
     setShowChangedLeaderboard(false);
-    localStorage.setItem('gm_hide_lb_notice_001', 'true');
+    localStorage.setItem('gm_hide_notice', 'true');
   }
 
   useEffect(() => {
@@ -34,7 +34,7 @@ export default function Home({ leaderboard: lb }: { leaderboard: User[] }) {
   }, []);
 
   useEffect(() => {
-    if (typeof window != 'undefined') setShowChangedLeaderboard(localStorage.getItem('gm_hide_lb_notice_001') != 'true');
+    if (typeof window != 'undefined') setShowChangedLeaderboard(localStorage.getItem('gm_hide_notice') != 'true');
   }, []);
 
   return (
@@ -45,7 +45,7 @@ export default function Home({ leaderboard: lb }: { leaderboard: User[] }) {
       </Head>
       {showChangedLeaderboard && <AlertBanner blue>
         <AlertClose onClick={() => hideLbNotice()}>X</AlertClose>
-        <AlertText>We just changed the unofficial leaderboard to count only public gm's - This is why it may look different.</AlertText>
+        <AlertText>This is goodbye, gm is shutting down read more about it <Link href="https://gm.town" passHref>here</Link> on the gm website</AlertText>
       </AlertBanner>}
       <ToastContainer
         position="top-right"
