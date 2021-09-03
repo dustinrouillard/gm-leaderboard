@@ -1,9 +1,9 @@
+import Link from "next/link";
 import Head from "next/head";
 
+import { ToastContainer } from "react-toastify";
 import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { ToastContainer } from "react-toastify";
-import Link from "next/link";
 
 import "react-toastify/dist/ReactToastify.css";
 
@@ -17,13 +17,13 @@ export default function Home({ recent }: { recent: PostWithCreator[] }) {
   
   const listRef = useRef<HTMLDivElement & {scrollTopMax: number}>();
 
-  async function updatePosts(new_post: PostWithCreator) {
+  async function updatePosts(new_post: PostWithCreator, scrollLock: boolean) {
     setRecents((prev) => {
       if (prev.length >= 25) prev.shift();
       return [...prev, new_post];
     });
 
-    if (listRef.current.scrollTopMax - listRef.current.scrollTop <= 60) listRef.current.scroll(0, listRef.current.scrollTopMax)
+    listRef.current.scroll(0, listRef.current.scrollTopMax);
   }
 
   useEffect(() => {
