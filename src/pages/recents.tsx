@@ -75,7 +75,7 @@ export default function Home({ recent }: { recent: PostWithCreator[] }) {
                       <Name>
                         {lb.creator.name} (@{lb.creator.username})
                       </Name>
-                      <GMMessage>gm</GMMessage>
+                      <GMMessage>{lb.text}</GMMessage>
                     </Names>
                     <DateCreated>{timeSince(new Date(lb.creation_time), true)}</DateCreated>
                   </LeaderboardEntry>

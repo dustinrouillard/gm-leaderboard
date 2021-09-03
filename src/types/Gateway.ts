@@ -30,4 +30,5 @@ export interface PostWithCreator {
   creator: User;
   id: string;
   type: string;
+  text: string;
 }
