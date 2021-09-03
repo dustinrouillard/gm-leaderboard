@@ -1,7 +1,7 @@
 import { EventEmitter } from "events";
 import { inflate, deflate } from "pako";
 import { toast } from "react-toastify";
-import { OfficialUser, Post, User } from "../types/Gateway";
+import { OfficialUser, Post, PostWithCreator, User } from "../types/Gateway";
 
 export const GATEWAY_HOST = "wss://gm-gateway.dstn.to";
 
@@ -70,7 +70,7 @@ export class Gateway extends EventEmitter {
 
       try {
         this.message(message);
-      } catch (error) {}
+      } catch (error) { }
     });
 
     // Close event for websocket
@@ -89,10 +89,10 @@ export class Gateway extends EventEmitter {
       this.connectionAttempt == 1
         ? 1000 * 10
         : this.connectionAttempt == 2
-        ? 1000 * 40
-        : this.connectionAttempt == 3
-        ? 1000 * 60 * 1
-        : 1000 * 60 * 10
+          ? 1000 * 40
+          : this.connectionAttempt == 3
+            ? 1000 * 60 * 1
+            : 1000 * 60 * 10
     ); // 10sx40sx1mx10m*
   }
 
@@ -142,8 +142,8 @@ export class Gateway extends EventEmitter {
           "font-size: 1em;",
           data.d
         );
-        const d = data.d as Post & { creator: User };
-        toast(`${d.creator.name} (@${d.creator.username}) said ${d.type.toLowerCase()}`);
+        const d = data.d as PostWithCreator;
+        toast(`${d.creator.name} (@${d.creator.username}) said ${d.text.toLowerCase()}`);
         this.emit("post", data.d);
 
         break;
