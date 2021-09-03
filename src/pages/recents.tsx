@@ -11,12 +11,10 @@ import { PostWithCreator } from "../types/Gateway";
 import { getRecentGmers } from "../utils/api";
 import { gateway } from "../utils/gateway";
 import { timeSince } from "../utils/time";
-import { GetStaticProps } from "next";
 
 export default function Home({ recent }: { recent: PostWithCreator[] }) {
   const [recents, setRecents] = useState<PostWithCreator[]>(recent);
   
-  const lastEntry = useRef<HTMLDivElement>();
   const listRef = useRef<HTMLDivElement & {scrollTopMax: number}>();
 
   async function updatePosts(new_post: PostWithCreator) {
@@ -25,7 +23,7 @@ export default function Home({ recent }: { recent: PostWithCreator[] }) {
       return [...prev, new_post];
     });
 
-    if (listRef.current.scrollTopMax - listRef.current.scrollTop <= 60) lastEntry.current.scrollIntoView();
+    if (listRef.current.scrollTopMax - listRef.current.scrollTop <= 60) listRef.current.scroll(0, listRef.current.scrollTopMax)
   }
 
   useEffect(() => {
@@ -71,7 +69,7 @@ export default function Home({ recent }: { recent: PostWithCreator[] }) {
             {recents &&
               recents.map((lb) => (
                 <Link href={lb.creator.username} key={lb.id}>
-                  <LeaderboardEntry ref={lastEntry}>
+                  <LeaderboardEntry>
                     <UserAvatar src={lb.creator.avatar} />
                     <Names>
                       <Name>
