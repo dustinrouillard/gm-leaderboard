@@ -13,7 +13,7 @@ const avatars = [
 export async function getRecentGmers(): Promise<User[]> {
   const data = await fetch(`${API_HOST}/recents`).then((r) => r.json());
   for await (const post of data.data) post.creator.avatar = avatars[Math.floor(Math.random() * avatars.length)];
-  return data.data.reverse();
+  return data.data;
 }
 
 export async function getTopGmers(): Promise<User[]> {
