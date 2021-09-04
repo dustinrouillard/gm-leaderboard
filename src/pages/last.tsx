@@ -118,11 +118,9 @@ const LeaderboardContainer = styled.div`
   max-height: 628px;
   overflow: scroll;
   scroll-behavior: smooth;
-
 `;
 
 const LeaderboardEntry = styled.div`
-  cursor: pointer;
   display: flex;
   flex-direction: row;
 

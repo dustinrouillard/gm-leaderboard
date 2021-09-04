@@ -117,7 +117,6 @@ const LeaderboardContainer = styled.div`
 `;
 
 const LeaderboardEntry = styled.div`
-  cursor: pointer;
   display: flex;
   flex-direction: row;
 
