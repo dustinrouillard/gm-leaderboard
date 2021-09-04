@@ -33,7 +33,7 @@ export default function Home({ leaderboard }: { leaderboard: User[] }) {
       />
       <Container>
         <Content>
-          <Heading>gm • top fifty</Heading>
+          <Heading>gm • top one hundred</Heading>
           <HeadingNav>
             <Link href="/" passHref>
               <HeadingLink>unofficial public</HeadingLink>
