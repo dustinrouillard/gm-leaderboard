@@ -1,52 +1,25 @@
 import Head from "next/head";
 import Link from "next/link";
+import { GetStaticProps } from "next";
 
 import styled from "styled-components";
-import { useState, useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
 
 import { User } from "../types/Gateway";
 import { getTopGmers } from "../utils/api";
-import { gateway } from "../utils/gateway";
 
-export default function Home({ leaderboard: lb }: { leaderboard: User[] }) {
-  const [leaderboard, setLeaderboard] = useState<User[]>(lb);
-  
-  const [showChangedLeaderboard, setShowChangedLeaderboard] = useState(false);
-
-  async function updateLb(new_users: User[]) {
-    setLeaderboard(new_users);
-  }
-
-  function hideLbNotice() {
-    setShowChangedLeaderboard(false);
-    localStorage.setItem('gm_hide_notice', 'true');
-  }
-
-  useEffect(() => {
-    gateway.addListener("leaderboard", updateLb);
-
-    return () => {
-      gateway.removeListener("leaderboard", updateLb);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (typeof window != 'undefined') setShowChangedLeaderboard(localStorage.getItem('gm_hide_notice') != 'true');
-  }, []);
-
+export default function Home({ leaderboard }: { leaderboard: User[] }) {
   return (
     <>
       <Head>
-        <title>gm leaderboard • dstn.to</title>
+        <title>gm • dstn.to</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      {showChangedLeaderboard && <AlertBanner blue>
-        <AlertClose onClick={() => hideLbNotice()}>X</AlertClose>
-        <AlertText>This is goodbye, gm is shutting down read more about it <Link href="https://gm.town" passHref>here</Link> on the gm website</AlertText>
-      </AlertBanner>}
+      <AlertBanner red>
+        <AlertText>gm is now offline, this site is read-only archived</AlertText>
+      </AlertBanner>
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -60,10 +33,10 @@ export default function Home({ leaderboard: lb }: { leaderboard: User[] }) {
       />
       <Container>
         <Content>
-          <Heading>gm • top ten</Heading>
+          <Heading>gm • top fifty</Heading>
           <HeadingNav>
             <Link href="/" passHref>
-              <HeadingLink>unofficial</HeadingLink>
+              <HeadingLink>unofficial public</HeadingLink>
             </Link>
             <Link href="/official" passHref>
               <HeadingLink inactive>official</HeadingLink>
@@ -141,6 +114,8 @@ const LeaderboardContainer = styled.div`
   width: 100%;
   border-radius: 10px;
   padding: 20px;
+  max-height: 628px;
+  overflow: scroll;
 `;
 
 const LeaderboardEntry = styled.div`
@@ -236,12 +211,12 @@ const AlertClose = styled.p`
   opacity: .75;
 `;
 
-export async function getServerSideProps(context: any) {
+export const getStaticProps: GetStaticProps = async function (context) {
   const leaderboard = await getTopGmers();
 
   return {
     props: {
       leaderboard,
-    }
+    },
   };
 };

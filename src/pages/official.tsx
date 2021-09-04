@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
+import { GetStaticProps } from "next";
 
 import styled from "styled-components";
 import { ToastContainer } from "react-toastify";
@@ -7,32 +8,18 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { OfficialUser } from "../types/Gateway";
-import { getOfficialTopGmers, getTopGmers } from "../utils/api";
-import { useEffect, useState } from "react";
-import { gateway } from "../utils/gateway";
-import { GetStaticProps } from "next";
+import { getOfficialTopGmers } from "../utils/api";
 
-export default function Home({ leaderboard: lb }: { leaderboard: OfficialUser[] }) {
-  const [leaderboard, setLeaderboard] = useState<OfficialUser[]>(lb);
-
-  async function updateLb(new_users: OfficialUser[]) {
-    setLeaderboard(new_users);
-  }
-
-  useEffect(() => {
-    gateway.addListener("official_leaderboard", updateLb);
-
-    return () => {
-      gateway.removeListener("official_leaderboard", updateLb);
-    };
-  }, []);
-
+export default function Home({ leaderboard }: { leaderboard: OfficialUser[] }) {
   return (
     <>
       <Head>
-        <title>gm leaderboard • dstn.to</title>
+        <title>gm • dstn.to</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <AlertBanner red>
+        <AlertText>gm is now offline, this site is read-only archived</AlertText>
+      </AlertBanner>
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -49,7 +36,7 @@ export default function Home({ leaderboard: lb }: { leaderboard: OfficialUser[] 
           <Heading>gm • top fifty</Heading>
           <HeadingNav>
             <Link href="/" passHref>
-              <HeadingLink inactive>unofficial</HeadingLink>
+              <HeadingLink inactive>unofficial public</HeadingLink>
             </Link>
             <Link href="/official" passHref>
               <HeadingLink>official</HeadingLink>
@@ -196,7 +183,27 @@ const Footer = styled.span`
   opacity: 0.4;
 `;
 
-export async function getServerSideProps(context: any) {
+const AlertBanner = styled.div<{ blue?: boolean; red?: boolean }>`
+  position: absolute;
+  width: 100%;
+
+  background-color: ${({blue, red}) => blue ? '#2d8fff' : red ? 'red' : 'green'};
+  color: #ffffff;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const AlertText = styled.p`
+  color: #ffffff;
+  margin: 0;
+  text-align: center;
+  font-weight: bold;
+  flex: 1;
+`;
+
+export const getStaticProps: GetStaticProps = async function (context) {
   const leaderboard = await getOfficialTopGmers();
 
   return {

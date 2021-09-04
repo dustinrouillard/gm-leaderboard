@@ -1,45 +1,27 @@
 import Link from "next/link";
 import Head from "next/head";
+import { GetStaticProps } from "next";
 
 import { ToastContainer } from "react-toastify";
-import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 
 import "react-toastify/dist/ReactToastify.css";
 
 import { PostWithCreator } from "../types/Gateway";
 import { getRecentGmers } from "../utils/api";
-import { gateway } from "../utils/gateway";
 import { timeSince } from "../utils/time";
 
-export default function Home({ recent }: { recent: PostWithCreator[] }) {
-  const [recents, setRecents] = useState<PostWithCreator[]>(recent);
-  
-  const listRef = useRef<HTMLDivElement & {scrollTopMax: number}>();
-
-  async function updatePosts(new_post: PostWithCreator, scrollLock: boolean) {
-    setRecents((prev) => {
-      if (prev.length >= 25) prev.shift();
-      return [...prev, new_post];
-    });
-
-    listRef.current.scroll(0, listRef.current.scrollTopMax);
-  }
-
-  useEffect(() => {
-    gateway.addListener("post", updatePosts);
-
-    return () => {
-      gateway.removeListener("post", updatePosts);
-    };
-  }, []);
+export default function Home({ recent: recents}: { recent: PostWithCreator[] }) {
 
   return (
     <>
       <Head>
-        <title>gm recents • dstn.to</title>
+        <title>gm • dstn.to</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <AlertBanner red>
+        <AlertText>gm is now offline, this site is read-only archived</AlertText>
+      </AlertBanner>
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -53,10 +35,10 @@ export default function Home({ recent }: { recent: PostWithCreator[] }) {
       />
       <Container>
         <Content>
-          <Heading>gm • recent gms</Heading>
+          <Heading>gm • final ten posts</Heading>
           <HeadingNav>
             <Link href="/" passHref>
-              <HeadingLink inactive>unofficial</HeadingLink>
+              <HeadingLink inactive>unofficial public</HeadingLink>
             </Link>
             <Link href="/official" passHref>
               <HeadingLink inactive>official</HeadingLink>
@@ -65,7 +47,7 @@ export default function Home({ recent }: { recent: PostWithCreator[] }) {
               <HeadingLink>recents</HeadingLink>
             </Link>
           </HeadingNav>
-          <LeaderboardContainer ref={listRef}>
+          <LeaderboardContainer>
             {recents &&
               recents.map((lb) => (
                 <Link href={lb.creator.username} key={lb.id}>
@@ -194,12 +176,30 @@ const Footer = styled.span`
   opacity: 0.4;
 `;
 
-export async function getServerSideProps(context: any) {
+const AlertBanner = styled.div<{ blue?: boolean; red?: boolean }>`
+  position: absolute;
+  width: 100%;
+
+  background-color: ${({blue, red}) => blue ? '#2d8fff' : red ? 'red' : 'green'};
+  color: #ffffff;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const AlertText = styled.p`
+  color: #ffffff;
+  margin: 0;
+  text-align: center;
+  font-weight: bold;
+  flex: 1;
+`;
+
+export const getStaticProps: GetStaticProps = async function (context) {
   const recent = await getRecentGmers();
 
   return {
-    props: {
-      recent,
-    },
+    props: { recent },
   };
-}
+};
