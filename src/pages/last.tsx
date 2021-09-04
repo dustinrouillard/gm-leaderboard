@@ -50,18 +50,16 @@ export default function Home({ recent: recents}: { recent: PostWithCreator[] }) 
           <LeaderboardContainer>
             {recents &&
               recents.map((lb) => (
-                <Link href={lb.creator.username} key={lb.id}>
-                  <LeaderboardEntry>
-                    <UserAvatar src={lb.creator.avatar} />
-                    <Names>
-                      <Name>
-                        {lb.creator.name} (@{lb.creator.username})
-                      </Name>
-                      <GMMessage>{lb.text}</GMMessage>
-                    </Names>
-                    <DateCreated>{timeSince(new Date(lb.creation_time), true)}</DateCreated>
-                  </LeaderboardEntry>
-                </Link>
+                <LeaderboardEntry key={lb.id}>
+                  <UserAvatar src={lb.creator.avatar} />
+                  <Names>
+                    <Name>
+                      {lb.creator.name} (@{lb.creator.username})
+                    </Name>
+                    <GMMessage>{lb.text}</GMMessage>
+                  </Names>
+                  <DateCreated>{timeSince(new Date(lb.creation_time), true)}</DateCreated>
+                </LeaderboardEntry>
               ))}
           </LeaderboardContainer>
           <Footer>
