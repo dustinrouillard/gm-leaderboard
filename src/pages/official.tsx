@@ -41,8 +41,8 @@ export default function Home({ leaderboard }: { leaderboard: OfficialUser[] }) {
             <Link href="/official" passHref>
               <HeadingLink>official</HeadingLink>
             </Link>
-            <Link href="/recents" passHref>
-              <HeadingLink inactive>recents</HeadingLink>
+            <Link href="/last" passHref>
+              <HeadingLink inactive>final goodnights</HeadingLink>
             </Link>
           </HeadingNav>
           <LeaderboardContainer>

@@ -43,8 +43,8 @@ export default function Home({ recent: recents}: { recent: PostWithCreator[] }) 
             <Link href="/official" passHref>
               <HeadingLink inactive>official</HeadingLink>
             </Link>
-            <Link href="/recents" passHref>
-              <HeadingLink>recents</HeadingLink>
+            <Link href="/last" passHref>
+              <HeadingLink>final goodnights</HeadingLink>
             </Link>
           </HeadingNav>
           <LeaderboardContainer>
